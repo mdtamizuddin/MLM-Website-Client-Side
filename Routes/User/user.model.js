@@ -12,6 +12,16 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please Enter Your Email"],
         unique: true,
     },
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
+    },
+    status: {
+        type: String,
+        enum: ["active", "inactive"],
+        default: "active",
+    },
     name: {
         type: String,
         required: [true, "Please Enter Your Name"],
@@ -32,7 +42,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Please Enter Your Password"],
-        minlength: 6, 
+        minlength: 6,
     },
     paymentMethod: {
         type: String,
@@ -47,7 +57,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "Transaction details are required"],
     },
     time: {
-        type: Date, 
+        type: Date,
         required: [true, "Please provide the time information"],
     },
     reffer: {
@@ -63,7 +73,7 @@ const userSchema = new mongoose.Schema({
         default: 0
     }
 }, {
-    timestamps: true, 
+    timestamps: true,
 });
 const User = mongoose.model("User", userSchema);
 module.exports = User;
