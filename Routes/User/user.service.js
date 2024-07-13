@@ -15,6 +15,7 @@ const createUser = async (req, res) => {
             req.body.reffer = refferUser._id;
         }
         req.body.password = await saltGenerator(req.body.password);
+        req.body.time = new Date(req.body.time);
         const user = new User(req.body);
         await user.save();
         res.sand({
