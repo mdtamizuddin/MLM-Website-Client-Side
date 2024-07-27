@@ -1,0 +1,57 @@
+const mongoose = require("mongoose");
+
+const settingSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "Setting name is required"],
+    },
+    siteName: {
+        type: String,
+        required: [true, "Setting siteName is required"],
+    },
+    siteLogo: {
+        type: String,
+        default: ""
+    },
+    ref_comm: {
+       gen1: {
+           type: Number,
+           default: 20
+       },
+       gen2: {
+           type: Number,
+           default: 10
+       },
+       gen3: {
+           type: Number,
+           default: 5
+       },
+       gen4: {
+           type: Number,
+           default: 1
+       },
+       gen5: {
+           type: Number,
+           default: 1
+       },
+       gen6: {
+           type: Number,
+           default: 1
+       },
+    },
+    register: {
+        type: Boolean,
+        default: true
+    },
+    withdraw: {
+        type: Boolean,
+        default: true
+    },
+    copyright: {
+        type: String
+    }
+},{
+    timestamps: true
+});
+const Setting = mongoose.model("Setting", settingSchema);
+module.exports = Setting;

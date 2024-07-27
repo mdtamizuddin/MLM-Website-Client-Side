@@ -39,4 +39,7 @@ router.put('/password/:id',
 router.delete('/:id',
     authChecker, userService.deleteUser)
 
+// Active An User
+router.put('/active/:id',
+    authChecker, userService.activeAnUser)
 module.exports = router

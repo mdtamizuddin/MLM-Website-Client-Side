@@ -1,5 +1,7 @@
 const saltGenerator = require("../../util/saltGenerator");
 const tokenGenerator = require("../../util/tokenGenerator");
+const getSetting = require("../Settings/getSetting");
+const Setting = require("../Settings/setting.model");
 const User = require("./user.model");
 const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
@@ -18,6 +20,10 @@ const createUser = async (req, res) => {
                 });
             }
             req.body.reffer = refferUser._id;
+            // add referer 1 account balance here
+            await User.findByIdAndUpdate(refferUser._id, {
+                balance: refferUser.balance + 1
+            })
         }
         else {
             delete req.body.reffer;
@@ -32,9 +38,12 @@ const createUser = async (req, res) => {
             token
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({
+            message: error.message
+        });
     }
 }
+
 const loginUser = async (req, res) => {
     try {
         const user = await User.findOne({
@@ -180,6 +189,60 @@ const checkUser = async (req, res) => {
         res.status(400).send(error.message);
     }
 }
+const activeAnUser = async (req, res) => {
+    try {
+        const setting = await Setting.findById('66a4a094c8d1fd11daac6c28');
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(400).send({
+                message: "User not found"
+            });
+        }
+        user.isActive = true;
+        await user.save();
+        if (user.reffer) {
+            const refferUser = await User.findById(user.reffer);
+            refferUser.balance = refferUser.balance + setting.ref_comm.gen1;
+            await refferUser.save();
+            // check 2nd Generation is available ?
+            if (refferUser.reffer) {
+                const refferUser2 = await User.findById(refferUser.reffer);
+                refferUser2.balance = refferUser2.balance + setting.ref_comm.gen2;
+                await refferUser2.save();
+                // check 3rd Generation is available ?
+                if (refferUser2.reffer) {
+                    const refferUser3 = await User.findById(refferUser2.reffer);
+                    refferUser3.balance = refferUser3.balance + setting.ref_comm.gen3;
+                    await refferUser3.save();
+                    // check 4th Generation is available ?
+                    if (refferUser3.reffer) {
+                        const refferUser4 = await User.findById(refferUser3.reffer);
+                        refferUser4.balance = refferUser4.balance + setting.ref_comm.gen4;
+                        await refferUser4.save();
+                        // check 5th Generation is available ?
+                        if (refferUser4.reffer) {
+                            const refferUser5 = await User.findById(refferUser4.reffer);
+                            refferUser5.balance = refferUser5.balance + setting.ref_comm.gen5;
+                            await refferUser5.save();
+                            // check 6th Generation is available ?
+                            if (refferUser5.reffer) {
+                                const refferUser6 = await User.findById(refferUser5.reffer);
+                                refferUser6.balance = refferUser6.balance + setting.ref_comm.gen6;
+                                await refferUser6.save();
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        res.send({
+            message: "User activated successfully",
+        });
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
     createUser,
     getAllData,
@@ -189,5 +252,6 @@ module.exports = {
     updatePassword,
     loginUser,
     getCurrentUser,
-    checkUser
+    checkUser,
+    activeAnUser
 }

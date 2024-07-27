@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
         minlength: 5,
         required: [true, "Username is required (minimum 5 characters)"],
     },
+    
     email: {
         type: String,
         required: [true, "Please Enter Your Email"],
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ["active", "inactive"],
-        default: "active",
+        default: "pending",
     },
     name: {
         type: String,
