@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { admin } = require('../User/user.role');
 const workService = require('./withdraw.service')
 router.post('/', async (req, res) => {
     try {
@@ -12,6 +13,12 @@ router.post('/', async (req, res) => {
 })
 router.get('/', async (req, res) => {
     try {
+        const user = req.user
+        if (user.role !== admin) {
+           return res.status(400).send({
+                message: "You are not authorized to access this route"
+            });
+        }
         const response = await workService.getAllData(req.query);
         res.send(response);
     } catch (error) {
