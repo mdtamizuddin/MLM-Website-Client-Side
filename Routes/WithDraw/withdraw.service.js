@@ -36,7 +36,19 @@ const getAllData = async (query) => {
         if (query.status) {
             filters.status = query.status
         }
+        if (query.user) {
+            filters.user = query.user
+        }
+        const start = new Date(query.search);
+        if (query.search) {
+            filters.createdAt = {
+                $gte: start,
+                $lt: new Date(start.getTime() + 24 * 60 * 60 * 1000)
+            }
+        }
         const withDraws = await Withdraw.find(filters)
+            .populate("user", "-password")
+            .sort({ createdAt: query.reverse ? -1 : 1 })
             .skip(skip)
             .limit(limit);
         const total = await Withdraw.countDocuments();
@@ -50,11 +62,15 @@ const getAllData = async (query) => {
         throw new Error(error)
     }
 }
+
+
 // get single data
 
 const getSingle = async (id) => {
     try {
-        const withDraw = await Withdraw.findById(id);
+        const withDraw = await Withdraw.findById(id)
+            .populate("user", "-password")
+            .exec();
         return withDraw
     } catch (error) {
         throw new Error(error)
@@ -63,8 +79,27 @@ const getSingle = async (id) => {
 // update data
 const updateData = async (id, data) => {
     try {
-        const withDraw = await Withdraw.findByIdAndUpdate(id, data, { new: true });
-        return withDraw
+         await Withdraw.findByIdAndUpdate(id, data, { new: true });
+        return {
+            message: "Data updated successfully",
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+// Reject data
+const rejectWithdraw = async (id) => {
+    try {
+        const data = await Withdraw.findById(id);
+        if (!data) {
+            throw new Error("Data not found")
+        }
+        data.status = "rejected"
+        await data.save();
+        await User.findByIdAndUpdate(data.user, {
+            $inc: { balance: data.amount }
+        })
+        return data
     } catch (error) {
         throw new Error(error)
     }
@@ -84,5 +119,6 @@ module.exports = {
     getAllData,
     getSingle,
     updateData,
-    deleteData
+    deleteData,
+    rejectWithdraw
 }

@@ -111,7 +111,28 @@ const getSingle = async (req, res) => {
         }
         res.send(user);
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({
+            message: error.message
+        });
+    }
+}
+const searchUser = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.id })
+            .select("-password")
+            .populate("reffer");
+        const data = {
+            user,
+            success: false
+        }
+        if (user) {
+            data.success = true
+        }
+        res.send(data);
+    } catch (error) {
+        res.status(400).send({
+            message: error.message
+        });
     }
 }
 const updateUser = async (req, res) => {
@@ -253,5 +274,6 @@ module.exports = {
     loginUser,
     getCurrentUser,
     checkUser,
-    activeAnUser
+    activeAnUser,
+    searchUser
 }

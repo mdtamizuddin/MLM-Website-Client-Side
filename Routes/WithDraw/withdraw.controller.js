@@ -13,12 +13,12 @@ router.post('/', async (req, res) => {
 })
 router.get('/', async (req, res) => {
     try {
-        const user = req.user
-        if (user.role !== admin) {
-           return res.status(400).send({
-                message: "You are not authorized to access this route"
-            });
-        }
+        // const user = req.user
+        // if (user.role !== admin) {
+        //    return res.status(400).send({
+        //         message: "You are not authorized to access this route"
+        //     });
+        // }
         const response = await workService.getAllData(req.query);
         res.send(response);
     } catch (error) {
@@ -27,6 +27,7 @@ router.get('/', async (req, res) => {
         });
     }
 })
+
 // get Single 
 
 router.get('/:id', async (req, res) => {
@@ -45,6 +46,19 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const response = await workService.updateData(req.params.id, req.body);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+})
+
+// Reject data
+
+router.put('/reject/:id', async (req, res) => {
+    try {
+        const response = await workService.rejectWithdraw(req.params.id);
         res.send(response);
     } catch (error) {
         res.status(500).send({
