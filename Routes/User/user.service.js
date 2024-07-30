@@ -219,7 +219,7 @@ const activeAnUser = async (req, res) => {
                 message: "User not found"
             });
         }
-        user.isActive = true;
+        user.status = "active";
         await user.save();
         if (user.reffer) {
             const refferUser = await User.findById(user.reffer);

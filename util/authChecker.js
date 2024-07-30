@@ -20,6 +20,7 @@ const authChecker = async (req, res, next) => {
         });
     }
     const user = await User.findOne({ _id: decoded.id })
+        .populate("reffer")
         .select("-password");
     if (!user) {
         return res.status(401).send({
