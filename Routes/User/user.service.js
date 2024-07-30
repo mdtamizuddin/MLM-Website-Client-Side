@@ -85,7 +85,7 @@ const getAllData = async (req, res) => {
     try {
         const users = await User.find()
             .select("-password")
-            .populate("reffer")
+            .populate("reffer", "-password")
             .skip(skip)
             .limit(limit);
         const total = await User.countDocuments();
@@ -105,7 +105,7 @@ const getSingle = async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
             .select("-password")
-            .populate("reffer");
+            .populate("reffer", "-password");
         if (!user) {
             res.status(400).send("User not found");
         }
@@ -120,7 +120,7 @@ const searchUser = async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.id })
             .select("-password")
-            .populate("reffer");
+            .populate("reffer", "-password");
         const data = {
             user,
             success: false
