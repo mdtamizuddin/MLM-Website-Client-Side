@@ -14,30 +14,56 @@ const settingSchema = new mongoose.Schema({
         default: ""
     },
     ref_comm: {
-       gen1: {
-           type: Number,
-           default: 20
-       },
-       gen2: {
-           type: Number,
-           default: 10
-       },
-       gen3: {
-           type: Number,
-           default: 5
-       },
-       gen4: {
-           type: Number,
-           default: 1
-       },
-       gen5: {
-           type: Number,
-           default: 1
-       },
-       gen6: {
-           type: Number,
-           default: 1
-       },
+        gen1: {
+            type: Number,
+            default: 20
+        },
+        gen2: {
+            type: Number,
+            default: 10
+        },
+        gen3: {
+            type: Number,
+            default: 5
+        },
+        gen4: {
+            type: Number,
+            default: 1
+        },
+        gen5: {
+            type: Number,
+            default: 1
+        },
+        gen6: {
+            type: Number,
+            default: 1
+        },
+    },
+    accounts: {
+        phone: {
+            type: String
+        },
+        whatsapp: {
+            type: String
+        },
+        email: {
+            type: String
+        },
+        bkash: {
+            type: String
+        },
+        nagad: {
+            type: String
+        },
+        rocket: {
+            type: String
+        },
+        upay: {
+            type: String
+        },
+        payeer: {
+            type: String
+        }
     },
     register: {
         type: Boolean,
@@ -50,7 +76,7 @@ const settingSchema = new mongoose.Schema({
     copyright: {
         type: String
     }
-},{
+}, {
     timestamps: true
 });
 const Setting = mongoose.model("Setting", settingSchema);

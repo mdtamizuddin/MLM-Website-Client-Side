@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
 
 // Reject data
 
-router.put('/reject/:id', async (req, res) => {
+router.put('/accept/:id', async (req, res) => {
     try {
         const response = await workService.rejectWithdraw(req.params.id);
         res.send(response);

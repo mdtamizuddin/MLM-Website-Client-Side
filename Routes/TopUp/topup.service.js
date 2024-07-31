@@ -89,8 +89,8 @@ const rejectWithdraw = async (id) => {
         if (!data) {
             throw new Error("Data not found")
         }
-        data.status = "rejected"
-        await data.save();
+        data.status = "completed"
+                await data.save();
         await User.findByIdAndUpdate(data.user, {
             $inc: { balance: data.amount }
         })
