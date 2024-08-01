@@ -5,7 +5,7 @@ const connectDB = require("./util/mongodb");
 const getSetting = require("./Routes/Settings/getSetting");
 const authChecker = require("./util/authChecker");
 const updateSetting = require("./Routes/Settings/updateSetting");
-const userService = require("./Routes/User/user.service");
+
 const User = require("./Routes/User/user.model");
 const Withdraw = require("./Routes/WithDraw/withdraw.model");
 require("dotenv").config();
