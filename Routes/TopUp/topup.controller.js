@@ -60,7 +60,7 @@ router.put('/accept/:id', async (req, res) => {
     try {
         const response = await workService.rejectWithdraw(req.params.id);
         res.send(response);
-    } catch (error) {
+    } catch (error) { // @
         res.status(500).send({
             message: error.message
         });
