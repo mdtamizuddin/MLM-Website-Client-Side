@@ -2,6 +2,7 @@ const saltGenerator = require("../../util/saltGenerator");
 const tokenGenerator = require("../../util/tokenGenerator");
 const getSetting = require("../Settings/getSetting");
 const Setting = require("../Settings/setting.model");
+const Withdraw = require("../WithDraw/withdraw.model");
 const User = require("./user.model");
 const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
@@ -98,7 +99,9 @@ const getAllData = async (req, res) => {
             token
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 const getSingle = async (req, res) => {
@@ -146,7 +149,9 @@ const updateUser = async (req, res) => {
             user: user
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 const updatePassword = async (req, res) => {
@@ -173,7 +178,9 @@ const updatePassword = async (req, res) => {
             message: "Password updated successfully",
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 const deleteUser = async (req, res) => {
@@ -183,7 +190,9 @@ const deleteUser = async (req, res) => {
             message: "User deleted successfully",
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 
@@ -207,7 +216,9 @@ const checkUser = async (req, res) => {
             })
         }
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 const activeAnUser = async (req, res) => {
@@ -261,7 +272,29 @@ const activeAnUser = async (req, res) => {
             message: "User activated successfully",
         });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(500).send({
+            message: error.message
+        });
+    }
+}
+const getStatistic = async (req, res) => {
+    try {
+        const total = User.countDocuments();
+        const active = User.countDocuments({ status: "active" });
+        const pending = User.countDocuments({ status: "pending" });
+        const blocked = User.countDocuments({ lock: true });
+        const total_withdraw = Withdraw.countDocuments({ status: "completed" });
+        res.send({
+            total,
+            active,
+            pending,
+            blocked,
+            total_withdraw
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
     }
 }
 module.exports = {
@@ -275,5 +308,6 @@ module.exports = {
     getCurrentUser,
     checkUser,
     activeAnUser,
-    searchUser
+    searchUser,
+    getStatistic
 }

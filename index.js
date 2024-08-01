@@ -5,6 +5,9 @@ const connectDB = require("./util/mongodb");
 const getSetting = require("./Routes/Settings/getSetting");
 const authChecker = require("./util/authChecker");
 const updateSetting = require("./Routes/Settings/updateSetting");
+const userService = require("./Routes/User/user.service");
+const User = require("./Routes/User/user.model");
+const Withdraw = require("./Routes/WithDraw/withdraw.model");
 require("dotenv").config();
 const app = express();
 app.use(cors());
@@ -34,6 +37,29 @@ app.get('/api/v1/setting', async (req, res) => {
         });
     }
 })
+app.get('/api/v1/statistic', async (req, res) => {
+    try {
+        const total = await User.countDocuments();
+        const active = await User.countDocuments({ status: "active" });
+        const pending = await User.countDocuments({ status: "pending" });
+        const blocked = await User.countDocuments({ lock: true });
+        const total_withdraw = await Withdraw.countDocuments({ status: "completed" });
+
+        res.send({
+            total,
+            active,
+            pending,
+            blocked,
+            total_withdraw
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+});
+
+
 app.put('/api/v1/setting', authChecker, async (req, res) => {
 
     try {

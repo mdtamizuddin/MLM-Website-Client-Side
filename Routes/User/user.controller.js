@@ -29,6 +29,7 @@ router.get('/search/:id', userService.searchUser)
 
 // Get Single Data
 router.get('/check/:id', userService.checkUser)
+router.get('/statistic', userService.getStatistic)
 
 // Update Data
 router.put('/:id',
