@@ -21,8 +21,7 @@ router.get('/me',
     authChecker, userService.getCurrentUser)
 
 // Get Single Data
-router.get('/:id',
-    authChecker, userService.getSingle)
+router.get('/:id', userService.getSingle)
 
 // Search an user
 router.get('/search/:id', userService.searchUser)

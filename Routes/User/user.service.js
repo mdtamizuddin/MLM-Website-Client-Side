@@ -1,5 +1,6 @@
 const saltGenerator = require("../../util/saltGenerator");
 const tokenGenerator = require("../../util/tokenGenerator");
+const { createRefer } = require("../Refer/refer.service");
 const getSetting = require("../Settings/getSetting");
 const Setting = require("../Settings/setting.model");
 const Withdraw = require("../WithDraw/withdraw.model");
@@ -233,31 +234,49 @@ const activeAnUser = async (req, res) => {
         user.status = "active";
         await user.save();
         if (user.reffer) {
+            const inGen1 = await createRefer({ user: user._id, reffer: user.reffer, gen: 1, commition: setting.ref_comm.gen1 });
             const refferUser = await User.findById(user.reffer);
             refferUser.balance = refferUser.balance + setting.ref_comm.gen1;
             await refferUser.save();
             // check 2nd Generation is available ?
             if (refferUser.reffer) {
+                const inGen2 = await createRefer({ user: user._id, reffer: user.reffer, gen: 2, commition: setting.ref_comm.gen2 });
                 const refferUser2 = await User.findById(refferUser.reffer);
                 refferUser2.balance = refferUser2.balance + setting.ref_comm.gen2;
                 await refferUser2.save();
                 // check 3rd Generation is available ?
                 if (refferUser2.reffer) {
+                    const inGen3 = await createRefer({ user: user._id, reffer: user.reffer, gen: 3, commition: setting.ref_comm.gen3 });
                     const refferUser3 = await User.findById(refferUser2.reffer);
                     refferUser3.balance = refferUser3.balance + setting.ref_comm.gen3;
                     await refferUser3.save();
                     // check 4th Generation is available ?
                     if (refferUser3.reffer) {
+                        const inGen4 = await createRefer({
+                            user: user._id, reffer: user.reffer, gen: 4,
+                            commition: setting.ref_comm.gen4
+                        });
                         const refferUser4 = await User.findById(refferUser3.reffer);
                         refferUser4.balance = refferUser4.balance + setting.ref_comm.gen4;
                         await refferUser4.save();
                         // check 5th Generation is available ?
                         if (refferUser4.reffer) {
+                            const inGen5 = await createRefer({
+                                user: user._id,
+                                reffer: user.reffer,
+                                gen: 5,
+                                commition: setting.ref_comm.gen5
+                            });
                             const refferUser5 = await User.findById(refferUser4.reffer);
                             refferUser5.balance = refferUser5.balance + setting.ref_comm.gen5;
                             await refferUser5.save();
                             // check 6th Generation is available ?
                             if (refferUser5.reffer) {
+                                const inGen6 = await createRefer({
+                                    user: user._id,
+                                    reffer: user.reffer, gen: 6,
+                                    commition: setting.ref_comm.gen6
+                                });
                                 const refferUser6 = await User.findById(refferUser5.reffer);
                                 refferUser6.balance = refferUser6.balance + setting.ref_comm.gen6;
                                 await refferUser6.save();

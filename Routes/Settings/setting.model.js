@@ -65,10 +65,34 @@ const settingSchema = new mongoose.Schema({
             type: String
         }
     },
+    links: {
+        whatsapp: {
+            type: String
+        },
+        telegram: {
+            type: String
+        },
+        facebook: {
+            type: String
+        },
+        page: {
+            type: String
+        },
+        video: {
+            type: String
+        }
+    },
     register: {
         type: Boolean,
         default: true
     },
+    ht_video:{
+        type: String
+    },
+    acAmm:{
+        type: Number
+    },
+    
     withdraw: {
         type: Boolean,
         default: true

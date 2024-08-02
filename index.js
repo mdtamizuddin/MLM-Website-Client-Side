@@ -61,7 +61,6 @@ app.get('/api/v1/statistic', async (req, res) => {
 
 
 app.put('/api/v1/setting', authChecker, async (req, res) => {
-
     try {
         if (req.user.role !== 'admin') {
             return res.status(400).send({
