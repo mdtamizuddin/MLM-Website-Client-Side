@@ -240,20 +240,20 @@ const activeAnUser = async (req, res) => {
             await refferUser.save();
             // check 2nd Generation is available ?
             if (refferUser.reffer) {
-                const inGen2 = await createRefer({ user: user._id, reffer: user.reffer, gen: 2, commition: setting.ref_comm.gen2 });
+                const inGen2 = await createRefer({ user: user._id, reffer: refferUser.reffer, gen: 2, commition: setting.ref_comm.gen2 });
                 const refferUser2 = await User.findById(refferUser.reffer);
                 refferUser2.balance = refferUser2.balance + setting.ref_comm.gen2;
                 await refferUser2.save();
                 // check 3rd Generation is available ?
                 if (refferUser2.reffer) {
-                    const inGen3 = await createRefer({ user: user._id, reffer: user.reffer, gen: 3, commition: setting.ref_comm.gen3 });
+                    const inGen3 = await createRefer({ user: user._id, reffer: refferUser2.reffer, gen: 3, commition: setting.ref_comm.gen3 });
                     const refferUser3 = await User.findById(refferUser2.reffer);
                     refferUser3.balance = refferUser3.balance + setting.ref_comm.gen3;
                     await refferUser3.save();
                     // check 4th Generation is available ?
                     if (refferUser3.reffer) {
                         const inGen4 = await createRefer({
-                            user: user._id, reffer: user.reffer, gen: 4,
+                            user: user._id, reffer: refferUser3.reffer, gen: 4,
                             commition: setting.ref_comm.gen4
                         });
                         const refferUser4 = await User.findById(refferUser3.reffer);
@@ -263,7 +263,7 @@ const activeAnUser = async (req, res) => {
                         if (refferUser4.reffer) {
                             const inGen5 = await createRefer({
                                 user: user._id,
-                                reffer: user.reffer,
+                                reffer: refferUser4.reffer,
                                 gen: 5,
                                 commition: setting.ref_comm.gen5
                             });
@@ -274,7 +274,7 @@ const activeAnUser = async (req, res) => {
                             if (refferUser5.reffer) {
                                 const inGen6 = await createRefer({
                                     user: user._id,
-                                    reffer: user.reffer, gen: 6,
+                                    reffer: refferUser5.reffer, gen: 6,
                                     commition: setting.ref_comm.gen6
                                 });
                                 const refferUser6 = await User.findById(refferUser5.reffer);

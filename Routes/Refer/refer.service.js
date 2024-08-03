@@ -22,7 +22,6 @@ const getAllRefer = async (user) => {
     try {
         const refer = await Refer.find({ reffer: user })
         .populate("user", "-password");
-        console.log(refer);
         return refer
     } catch (error) {
         throw new Error(error)
