@@ -84,11 +84,44 @@ const getAllData = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
+    const filters = {};
+    if (req.query.status) {
+        filters.status = req.query.status
+    }
+    if (req.query.search) {
+        filters.$or = [
+            {
+                username: {
+                    $regex: req.query.search,
+                    $options: "i"
+                }
+            },
+            {
+                name: {
+                    $regex: req.query.search,
+                    $options: "i"
+                }
+            },
+            {
+                email: {
+                    $regex: req.query.search,
+                    $options: "i"
+                }
+            }
+        ]
+    }
+    if (req.query.admin) {
+        filters.role = "admin"
+    }
+    else {
+        filters.role = "user"
+    }
     try {
-        const users = await User.find()
+        const users = await User.find(filters)
             .select("-password")
             .populate("reffer", "-password")
             .skip(skip)
+            .sort({ createdAt: req.query.reverse ? -1 : 1 })
             .limit(limit);
         const total = await User.countDocuments();
         const token = tokenGenerator(req.user);
