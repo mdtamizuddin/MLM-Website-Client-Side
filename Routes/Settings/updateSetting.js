@@ -14,7 +14,7 @@ const updateSetting = async (data) => {
             setting
         }
     } catch (error) {
-        res.status(400).send(error.message);
+        throw new Error(error);
     }
 }
 module.exports = updateSetting

@@ -90,7 +90,7 @@ const settingSchema = new mongoose.Schema({
         type: String
     },
     acAmm:{
-        type: Number
+        type: String
     },
     
     withdraw: {
