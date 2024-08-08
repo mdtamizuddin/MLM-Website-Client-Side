@@ -107,6 +107,12 @@ const getAllData = async (req, res) => {
                     $regex: req.query.search,
                     $options: "i"
                 }
+            },
+            {
+                phone: {
+                    $regex: req.query.search,
+                    $options: "i"
+                }
             }
         ]
     }
@@ -123,14 +129,18 @@ const getAllData = async (req, res) => {
             .skip(skip)
             .sort({ createdAt: req.query.reverse ? -1 : 1 })
             .limit(limit);
-        const total = await User.countDocuments();
-        const token = tokenGenerator(req.user);
+        const total = await User.countDocuments(filters);
+        const grandTotal = await User.countDocuments({role: "user"});
+        const active = await User.countDocuments({status: "active"});
+        const pending = await User.countDocuments({status: "pending"});
         res.send({
-            users,
             total,
             page,
             pages: Math.ceil(total / limit),
-            token
+            grandTotal,
+            active,
+            users,
+            pending
         });
     } catch (error) {
         res.status(500).send({
