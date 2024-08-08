@@ -24,7 +24,8 @@ const getAll = async (user, gen) => {
         const refer = await Refer.find()
         .sort({ createdAt: -1 })
         .limit(50)
-        .populate("user", "-password");
+        .populate("user", "name email phone")
+        .populate("reffer", "name email phone");
         const total = await Refer.countDocuments();
         return {
             data: refer,
@@ -38,8 +39,7 @@ const getAllRefer = async (user) => {
     try {
         const refer = await Refer.find({ reffer: user })
         .sort({ createdAt: -1 })
-        .populate("user", "name email phone")
-        .populate("reffer", "name email phone");
+        .populate("user", "-password");
         return refer
     } catch (error) {
         throw new Error(error)
