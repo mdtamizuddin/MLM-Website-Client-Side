@@ -12,6 +12,17 @@ const createRefer = async (data) => {
 const getReferHintory = async (user, gen) => {
     try {
         const refer = await Refer.find({ reffer: user, gen: gen })
+        .sort({ createdAt: -1 })
+        .populate("user", "-password");
+        return refer
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+const getAll = async (user, gen) => {
+    try {
+        const refer = await Refer.find()
+        .sort({ createdAt: -1 })
         .populate("user", "-password");
         return refer
     } catch (error) {
@@ -21,7 +32,9 @@ const getReferHintory = async (user, gen) => {
 const getAllRefer = async (user) => {
     try {
         const refer = await Refer.find({ reffer: user })
-        .populate("user", "-password");
+        .sort({ createdAt: -1 })
+        .populate("user", "name email phone")
+        .populate("reffer", "name email phone");
         return refer
     } catch (error) {
         throw new Error(error)
@@ -44,5 +57,6 @@ module.exports = {
     createRefer,
     getReferHintory,
     getAllRefer,
-    statistic
+    statistic,
+    getAll
 }
