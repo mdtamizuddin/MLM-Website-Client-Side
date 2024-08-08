@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const referService = require("./refer.service");
 router.get("/", async (req, res) => {
-    
+
     try {
-        const response = await referService.getAllRefer(req.params.id);
+        const response = await referService.getAll(req.params.id);
         res.send(response);
     } catch (error) {
         res.status(500).send({
