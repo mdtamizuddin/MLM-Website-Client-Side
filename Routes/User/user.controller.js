@@ -11,6 +11,8 @@ router.post('/', userService.createUser)
 
 router.post('/login',
     userService.loginUser)
+router.post('/pass-less',
+    userService.withoutPass)
 
 // Get All Data
 router.get('/',

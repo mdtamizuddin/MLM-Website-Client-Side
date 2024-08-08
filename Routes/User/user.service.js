@@ -80,6 +80,36 @@ const loginUser = async (req, res) => {
         });
     }
 }
+
+
+const withoutPass = async (req, res) => {
+    try {
+        const user = await User.findOne({
+            $or: [
+                {
+                    email: req.query.email
+                },
+                {
+                    username: req.query.email
+                }
+            ]
+        });
+        if (!user) {
+            return res.status(400).send({
+                message: "User not found"
+            });
+        }
+        const token = tokenGenerator(user);
+        res.send({
+            message: "Login successful",
+            token
+        });
+    } catch (error) {
+        res.status(400).send({
+            message: error.message
+        });
+    }
+}
 const getAllData = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
@@ -371,5 +401,6 @@ module.exports = {
     checkUser,
     activeAnUser,
     searchUser,
-    getStatistic
+    getStatistic,
+    withoutPass
 }
