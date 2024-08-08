@@ -13,7 +13,8 @@ const getReferHintory = async (user, gen) => {
     try {
         const refer = await Refer.find({ reffer: user, gen: gen })
         .sort({ createdAt: -1 })
-        .populate("user", "-password");
+        .populate("user", "name email phone")
+        .populate("reffer", "name email phone");
         return refer
     } catch (error) {
         throw new Error(error)
@@ -39,7 +40,8 @@ const getAllRefer = async (user) => {
     try {
         const refer = await Refer.find({ reffer: user })
         .sort({ createdAt: -1 })
-        .populate("user", "-password");
+        .populate("user", "name email phone")
+        .populate("reffer", "name email phone");
         return refer
     } catch (error) {
         throw new Error(error)
