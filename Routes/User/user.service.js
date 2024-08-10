@@ -309,20 +309,26 @@ const activeAnUser = async (req, res) => {
         if (user.reffer) {
             const inGen1 = await createRefer({ user: user._id, reffer: user.reffer, gen: 1, commition: setting.ref_comm.gen1 });
             const refferUser = await User.findById(user.reffer);
-            refferUser.balance = refferUser.balance + setting.ref_comm.gen1;
-            await refferUser.save();
+            // add balance on account of generation1
+            await User.findByIdAndUpdate(refferUser._id, {
+                $inc: { balance: setting.ref_comm.gen1 }
+            })
             // check 2nd Generation is available ?
             if (refferUser.reffer) {
                 const inGen2 = await createRefer({ user: user._id, reffer: refferUser.reffer, gen: 2, commition: setting.ref_comm.gen2 });
                 const refferUser2 = await User.findById(refferUser.reffer);
-                refferUser2.balance = refferUser2.balance + setting.ref_comm.gen2;
-                await refferUser2.save();
+                // add balance on account of generation2
+                await User.findByIdAndUpdate(refferUser2._id, {
+                    $inc: { balance: setting.ref_comm.gen2 }
+                })
                 // check 3rd Generation is available ?
                 if (refferUser2.reffer) {
                     const inGen3 = await createRefer({ user: user._id, reffer: refferUser2.reffer, gen: 3, commition: setting.ref_comm.gen3 });
                     const refferUser3 = await User.findById(refferUser2.reffer);
-                    refferUser3.balance = refferUser3.balance + setting.ref_comm.gen3;
-                    await refferUser3.save();
+                    // add balance on account of generation3
+                    await User.findByIdAndUpdate(refferUser3._id, {
+                        $inc: { balance: setting.ref_comm.gen3 }
+                    })
                     // check 4th Generation is available ?
                     if (refferUser3.reffer) {
                         const inGen4 = await createRefer({
@@ -330,8 +336,10 @@ const activeAnUser = async (req, res) => {
                             commition: setting.ref_comm.gen4
                         });
                         const refferUser4 = await User.findById(refferUser3.reffer);
-                        refferUser4.balance = refferUser4.balance + setting.ref_comm.gen4;
-                        await refferUser4.save();
+                        // add balance on account of generation4
+                        await User.findByIdAndUpdate(refferUser4._id, {
+                            $inc: { balance: setting.ref_comm.gen4 }
+                        })
                         // check 5th Generation is available ?
                         if (refferUser4.reffer) {
                             const inGen5 = await createRefer({
@@ -341,8 +349,10 @@ const activeAnUser = async (req, res) => {
                                 commition: setting.ref_comm.gen5
                             });
                             const refferUser5 = await User.findById(refferUser4.reffer);
-                            refferUser5.balance = refferUser5.balance + setting.ref_comm.gen5;
-                            await refferUser5.save();
+                            // add balance on account of generation5    
+                            await User.findByIdAndUpdate(refferUser5._id, {
+                                $inc: { balance: setting.ref_comm.gen5 }
+                            })
                             // check 6th Generation is available ?
                             if (refferUser5.reffer) {
                                 const inGen6 = await createRefer({
@@ -350,9 +360,11 @@ const activeAnUser = async (req, res) => {
                                     reffer: refferUser5.reffer, gen: 6,
                                     commition: setting.ref_comm.gen6
                                 });
-                                const refferUser6 = await User.findById(refferUser5.reffer);
-                                refferUser6.balance = refferUser6.balance + setting.ref_comm.gen6;
-                                await refferUser6.save();
+                                // add balance on account of generation6
+                                // const refferUser6 = await User.findById(refferUser5.reffer);
+                               await User.findByIdAndUpdate(refferUser5.reffer, {
+                                   $inc: { balance: setting.ref_comm.gen6 }
+                               })
                             }
                         }
                     }
