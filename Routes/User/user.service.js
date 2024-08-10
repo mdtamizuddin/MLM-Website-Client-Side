@@ -160,9 +160,9 @@ const getAllData = async (req, res) => {
             .sort({ createdAt: req.query.reverse ? -1 : 1 })
             .limit(limit);
         const total = await User.countDocuments(filters);
-        const grandTotal = await User.countDocuments({role: "user"});
-        const active = await User.countDocuments({status: "active"});
-        const pending = await User.countDocuments({status: "pending"});
+        const grandTotal = await User.countDocuments({ role: "user" });
+        const active = await User.countDocuments({ status: "active" });
+        const pending = await User.countDocuments({ status: "pending" });
         res.send({
             total,
             page,
@@ -195,7 +195,16 @@ const getSingle = async (req, res) => {
 }
 const searchUser = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.id })
+        const user = await User.findOne({
+            $or: [
+                {
+                    email: req.query.email
+                },
+                {
+                    username: req.query.email
+                }
+            ]
+        })
             .select("-password")
             .populate("reffer", "-password");
         const data = {
@@ -362,9 +371,9 @@ const activeAnUser = async (req, res) => {
                                 });
                                 // add balance on account of generation6
                                 // const refferUser6 = await User.findById(refferUser5.reffer);
-                               await User.findByIdAndUpdate(refferUser5.reffer, {
-                                   $inc: { balance: setting.ref_comm.gen6 }
-                               })
+                                await User.findByIdAndUpdate(refferUser5.reffer, {
+                                    $inc: { balance: setting.ref_comm.gen6 }
+                                })
                             }
                         }
                     }
