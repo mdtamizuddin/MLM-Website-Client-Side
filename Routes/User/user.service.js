@@ -201,16 +201,7 @@ const getSingle = async (req, res) => {
 }
 const searchUser = async (req, res) => {
     try {
-        const user = await User.findOne({
-            $or: [
-                {
-                    email: req.query.email
-                },
-                {
-                    username: req.query.email
-                }
-            ]
-        })
+        const user = await User.findOne({ username: req.params.id })
             .select("-password")
             .populate("reffer", "-password");
         const data = {
