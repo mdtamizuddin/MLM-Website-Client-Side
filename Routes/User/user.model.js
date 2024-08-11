@@ -56,6 +56,7 @@ const userSchema = new mongoose.Schema({
     trx: {
         type: String,
         required: [true, "Transaction details are required"],
+        unique: true
     },
     time: {
         type: Date,
