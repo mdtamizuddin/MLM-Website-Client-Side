@@ -14,6 +14,12 @@ const createUser = async (req, res) => {
                 message: "User already exist"
             });
         }
+        const trxIsvalid = await User.findOne({ trx: req.body.trx });
+        if (trxIsvalid) {
+            return res.status(400).send({
+                message: "Trx already exist"
+            });
+        }
         if (req.body.reffer !== "") {
             const refferUser = await User.findOne({ username: req.body.reffer });
             if (!refferUser) {
