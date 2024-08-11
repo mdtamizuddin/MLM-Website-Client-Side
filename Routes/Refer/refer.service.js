@@ -72,7 +72,7 @@ const statistic2 = async (user) => {
         const gen4 = await Refer.countDocuments({ reffer: userCheck._id, gen: 4 });
         const gen5 = await Refer.countDocuments({ reffer: userCheck._id, gen: 5 });
         const gen6 = await Refer.countDocuments({ reffer: userCheck._id, gen: 6 });
-        return { gen1, gen2, gen3, gen4, gen5, gen6, user }
+        return { gen1, gen2, gen3, gen4, gen5, gen6, user: userCheck }
     } catch (error) {
         throw new Error(error)
     }
