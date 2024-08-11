@@ -62,7 +62,7 @@ const statistic = async (user) => {
 }
 const statistic2 = async (user) => {
     try {
-        const userCheck = await User.findOne({ username: user })
+        const userCheck = await User.findOne({ $or: [{ username: user }, { email: user }] });
         if (!userCheck) {
             throw new Error("User not found")
         }
