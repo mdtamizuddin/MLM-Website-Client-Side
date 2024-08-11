@@ -43,6 +43,16 @@ router.get('/statistic', async (req, res) => {
         });
     }
 })
+router.get('/statistic/:id', async (req, res) => {
+    try {
+        const response = await referService.statistic2(req.params.id);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+})
 
 
 module.exports = router

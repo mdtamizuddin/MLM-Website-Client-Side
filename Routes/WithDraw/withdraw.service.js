@@ -18,8 +18,11 @@ const createWithDraw = async (data) => {
         const withDraw = new Withdraw(data);
         await withDraw.save();
         // deduct amount from user balance
-        userData.balance = userData.balance - amount;
-        await userData.save();
+        await User.findByIdAndUpdate(user, {
+            $inc: { balance: -amount }
+        })
+        // userData.balance = userData.balance - amount;
+        // await userData.save();
         return withDraw
     } catch (error) {
         throw new Error(error)
@@ -79,7 +82,7 @@ const getSingle = async (id) => {
 // update data
 const updateData = async (id, data) => {
     try {
-         await Withdraw.findByIdAndUpdate(id, data, { new: true });
+        await Withdraw.findByIdAndUpdate(id, data, { new: true });
         return {
             message: "Data updated successfully",
         }
