@@ -264,6 +264,11 @@ const updatePassword = async (req, res) => {
     }
 }
 const deleteUser = async (req, res) => {
+    if (req.user.role !== "admin") {
+        return res.status(400).send({
+            message: "You are not authorized to access this route"
+        })
+    }
     try {
         const user = await User.findByIdAndDelete(req.params.id);
         res.send({
@@ -302,6 +307,11 @@ const checkUser = async (req, res) => {
     }
 }
 const activeAnUser = async (req, res) => {
+    if (req.user.role !== "admin") {
+        return res.status(400).send({
+            message: "You are not authorized to access this route"
+        })
+    }
     try {
         const setting = await Setting.findById('66a4a094c8d1fd11daac6c28');
         const user = await User.findById(req.params.id);
