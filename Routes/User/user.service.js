@@ -28,13 +28,18 @@ const createUser = async (req, res) => {
                 });
             }
             req.body.reffer = refferUser._id;
-            // add referer 1 account balance here
-            await User.findByIdAndUpdate(refferUser._id, {
-                balance: refferUser.balance + 1
-            })
+
+            // // add referer 1 account balance here
+            // await User.findByIdAndUpdate(refferUser._id, {
+            //     balance: refferUser.balance + 1
+            // })
         }
         else {
             delete req.body.reffer;
+        }
+        // check is username includes space 
+        if (req.body.username.includes(" ")) {
+            req.body.username = req.body.username.split(" ").join("");
         }
         req.body.password = await saltGenerator(req.body.password);
         req.body.time = new Date(req.body.time);
