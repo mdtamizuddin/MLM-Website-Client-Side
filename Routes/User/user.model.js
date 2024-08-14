@@ -30,11 +30,11 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         enum: ["Male", "Female", "Other"],
-        required: [true, "Please select your gender"],
+        default: "Male"
     },
     education: {
         type: String,
-        required: [true, "Please enter your education details"],
+       default: "Other"
     },
     phone: {
         type: String,
@@ -47,20 +47,19 @@ const userSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        required: [true, "Please select a payment method"],
+        default: "Bkash"
     },
     account: {
         type: String,
-        required: [true, "Account information is required"],
+        default: "0000000"
     },
     trx: {
         type: String,
-        required: [true, "Transaction details are required"],
-        unique: true
+        default: "ERROR"
     },
     time: {
         type: Date,
-        required: [true, "Please provide the time information"],
+        default: Date.now
     },
     reffer: {
         type: mongoose.Schema.Types.ObjectId,
