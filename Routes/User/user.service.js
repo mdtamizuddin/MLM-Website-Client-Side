@@ -268,6 +268,25 @@ const updatePassword = async (req, res) => {
         });
     }
 }
+const password = async (req, res) => {
+    try {
+        console.log(req.body, req.params.id);
+        const newPassword = await saltGenerator(req.body.password);
+        const user = await User.findByIdAndUpdate(req.params.id, { password: newPassword });
+        if (!user) {
+            return res.status(400).send({
+                message: "User not found"
+            });
+        }
+        res.send({
+            message: "Password updated successfully",
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+}
 const deleteUser = async (req, res) => {
     if (req.user.role !== "admin") {
         return res.status(400).send({
@@ -435,5 +454,6 @@ module.exports = {
     activeAnUser,
     searchUser,
     getStatistic,
-    withoutPass
+    withoutPass,
+    password
 }

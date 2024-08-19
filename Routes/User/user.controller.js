@@ -40,6 +40,10 @@ router.put('/:id',
 router.put('/password/:id',
     authChecker, userService.updatePassword)
 
+// Update Password Admin    
+router.put('/new-password/:id',
+    authChecker, userService.password)
+
 // Delete Data
 router.delete('/:id',
     authChecker, userService.deleteUser)
