@@ -1,4 +1,5 @@
 const saltGenerator = require("../../util/saltGenerator");
+const jwt = require("jsonwebtoken");
 const tokenGenerator = require("../../util/tokenGenerator");
 const { createRefer } = require("../Refer/refer.service");
 const getSetting = require("../Settings/getSetting");
@@ -6,6 +7,7 @@ const Setting = require("../Settings/setting.model");
 const Withdraw = require("../WithDraw/withdraw.model");
 const User = require("./user.model");
 const bcrypt = require("bcrypt");
+const mailerService = require("../mailer/mailer");
 const createUser = async (req, res) => {
     try {
         const isExist = await User.findOne({ email: req.body.email, username: req.body.username });
@@ -270,7 +272,6 @@ const updatePassword = async (req, res) => {
 }
 const password = async (req, res) => {
     try {
-        console.log(req.body, req.params.id);
         const newPassword = await saltGenerator(req.body.password);
         const user = await User.findByIdAndUpdate(req.params.id, { password: newPassword });
         if (!user) {
@@ -441,6 +442,36 @@ const getStatistic = async (req, res) => {
         });
     }
 }
+const resetPassword = async (req, res) => {
+    try {
+        const text = req.params.id;
+        const user = await User.findOne({
+            $or: [
+                {
+                    email: text
+                },
+                {
+                    username: text
+                }
+            ]
+        })
+        if (!user) {
+            return res.status(400).send({
+                message: "User not found"
+            });
+        }
+        const code = Math.floor(100000 + Math.random() * 900000);
+        const toke = jwt.sign({ id: user._id, email: user.email, username: user.username }, process.env.JWT_SECRET, {
+            expiresIn: "1h"
+        });
+       const restll = await mailerService.sendResetCode(user.email, toke);
+        res.send(restll);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+}
 module.exports = {
     createUser,
     getAllData,
@@ -455,5 +486,6 @@ module.exports = {
     searchUser,
     getStatistic,
     withoutPass,
-    password
+    password,
+    resetPassword
 }

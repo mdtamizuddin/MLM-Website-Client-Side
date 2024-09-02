@@ -5,7 +5,7 @@ const connectDB = require("./util/mongodb");
 const getSetting = require("./Routes/Settings/getSetting");
 const authChecker = require("./util/authChecker");
 const updateSetting = require("./Routes/Settings/updateSetting");
-
+const transporter = require("./Routes/mailer/transporter");
 const User = require("./Routes/User/user.model");
 const Withdraw = require("./Routes/WithDraw/withdraw.model");
 require("dotenv").config();
@@ -58,7 +58,7 @@ app.get('/api/v1/statistic', async (req, res) => {
         });
     }
 });
-
+// verify connection configuration
 
 app.put('/api/v1/setting', authChecker, async (req, res) => {
     try {

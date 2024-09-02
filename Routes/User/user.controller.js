@@ -13,7 +13,7 @@ router.post('/login',
     userService.loginUser)
 router.get('/pass-less',
     userService.withoutPass)
-
+router.get('/send-link/:id', userService.resetPassword)
 // Get All Data
 router.get('/',
     authChecker, userService.getAllData)
@@ -41,8 +41,7 @@ router.put('/password/:id',
     authChecker, userService.updatePassword)
 
 // Update Password Admin    
-router.put('/new-password/:id',
-    authChecker, userService.password)
+router.put('/new-password/:id', userService.password)
 
 // Delete Data
 router.delete('/:id',
@@ -51,4 +50,6 @@ router.delete('/:id',
 // Active An User
 router.put('/active/:id',
     authChecker, userService.activeAnUser)
+// send reset mail
+
 module.exports = router
