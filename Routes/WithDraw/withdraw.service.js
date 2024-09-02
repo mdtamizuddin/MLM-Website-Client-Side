@@ -4,12 +4,18 @@ const Withdraw = require("./withdraw.model");
 const createWithDraw = async (data) => {
     try {
         const { amount, user } = data
+        // check today any withdraw has created with this user
+        const today = new Date();
+        const lastWithdraw = await Withdraw.findOne({ user, createdAt: { $gte: new Date(today.getFullYear(), today.getMonth(), today.getDate()) } });
+        if (lastWithdraw) {
+            throw new Error("You can't withdraw again today. Your Dayly withdraw limit is exceeded")
+        }
         const userData = await User.findById(user);
         if (!userData) {
             throw new Error("User not found")
         }
-        if (amount < 400) {
-            throw new Error("Withdraw amount must be greater than 400")
+        if (amount > 400 && amount > 200) {
+            throw new Error("Withdraw amount must be greater than 200 and less than = 400")
         }
         if (amount > userData.balance) {
             throw new Error("Insufficient balance")
