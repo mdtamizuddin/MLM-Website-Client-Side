@@ -60,12 +60,17 @@ const getAllData = async (query) => {
             .sort({ createdAt: query.reverse ? -1 : 1 })
             .skip(skip)
             .limit(limit);
-        const total = await Withdraw.countDocuments();
+        const total = await Withdraw.countDocuments(filters);
+        let totalWithdraw = 0
+        await withDraws.forEach(withdraw => {
+            totalWithdraw += withdraw.amount
+        })
         return {
             data: withDraws,
             total,
             page,
-            pages: Math.ceil(total / limit)
+            pages: Math.ceil(total / limit),
+            totalWithdraw: totalWithdraw
         }
     } catch (error) {
         throw new Error(error)

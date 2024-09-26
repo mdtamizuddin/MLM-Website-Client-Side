@@ -15,7 +15,11 @@ const getAllWork = async (params) => {
         const page = parseInt(params.page) || 1;
         const limit = parseInt(params.limit) || 20;
         const skip = (page - 1) * limit;
-        const works = await Work.find()
+        const filters = {};
+        if (params.category && params.category !== "all") {
+            filters.category = params.category
+        }
+        const works = await Work.find(filters)
             .skip(skip)
             .limit(limit);
         const total = await Work.countDocuments();

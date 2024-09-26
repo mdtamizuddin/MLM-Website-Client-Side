@@ -9,6 +9,10 @@ const workSchema = new mongoose.Schema({
         type: String,
         required: [true, "Work description is required"],
     },
+    category: {
+        type: String,
+        required: [true, "Work category is required"],
+    },
     link: {
         type: String,
         required: [true, "Work link is required"],
