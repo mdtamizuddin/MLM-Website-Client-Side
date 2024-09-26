@@ -47,11 +47,16 @@ const getAllData = async (query) => {
             .skip(skip)
             .limit(limit);
         const total = await Withdraw.countDocuments();
+        let totalWithdraw = 0
+        await withDraws.forEach(withdraw => {
+            totalWithdraw += withdraw.amount
+        })
         return {
             data: withDraws,
             total,
             page,
-            pages: Math.ceil(total / limit)
+            pages: Math.ceil(total / limit),
+            totalWithdraw
         }
     } catch (error) {
         throw new Error(error)
