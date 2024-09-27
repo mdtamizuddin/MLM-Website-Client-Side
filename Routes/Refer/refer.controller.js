@@ -21,6 +21,18 @@ router.get("/user/:id", async (req, res) => {
         });
     }
 })
+router.patch("/board", async (req, res) => {
+    try {
+        const date = req.body.date ? new Date(req.body.date) : new Date();
+
+        const response = await referService.statistic_board(date);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        });
+    }
+})
 router.get('/gen', async (req, res) => {
     try {
         const { gen, user } = req.query

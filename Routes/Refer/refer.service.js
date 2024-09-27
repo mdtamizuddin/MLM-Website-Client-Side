@@ -20,6 +20,74 @@ const getReferHintory = async (user, gen) => {
         throw new Error(error)
     }
 }
+const statistic_board = async (date) => {
+    try {
+        // Get the first and last day of the month
+        const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        const data = await Refer.aggregate([
+            // Match documents within the month
+            {
+                $match: {
+                    createdAt: {
+                        $gte: startOfMonth,
+                        $lt: endOfMonth
+                    }
+                }
+            },
+            // Group data by reffer
+            {
+                $group: {
+                    _id: "$reffer",
+                    gen1: {
+                        $sum: {
+                            $cond: [{ $eq: ["$gen", 1] }, 1, 0]
+                        }
+                    },
+                }
+            },
+            // Lookup user details and return as an object
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            },
+            // Unwind the user array to get a single user object
+            {
+                $unwind: "$user"
+            },
+            // Project only the fields we need
+            {
+                $project: {
+                    _id: 1,         // keep the _id (reffer ID)
+                    gen1: 1,        // keep the gen1 value
+                    "user.name": 1, // only select the name field from user
+                    "user.username": 1 // only select the username field from user
+                }
+            },
+            // Sort data by gen1 count
+            {
+                $sort: {
+                    gen1: -1
+                }
+            }
+        ]);
+
+        // Add position (rank) field to each entry
+        const rankedData = data.map((item, index) => ({
+            position: index + 1, // start position from 1
+            ...item
+        }));
+        
+        return rankedData.slice(0, 50); // limit to top 50
+    } catch (error) {
+        throw new Error(error);
+    }
+};
 const getAll = async (user, gen) => {
     try {
         const refer = await Refer.find()
@@ -83,5 +151,6 @@ module.exports = {
     getAllRefer,
     statistic,
     getAll,
-    statistic2
+    statistic2,
+    statistic_board
 }
