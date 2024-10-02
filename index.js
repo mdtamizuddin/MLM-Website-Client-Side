@@ -43,14 +43,14 @@ app.get('/api/v1/statistic', async (req, res) => {
         const active = await User.countDocuments({ status: "active" });
         const pending = await User.countDocuments({ status: "pending" });
         const blocked = await User.countDocuments({ lock: true });
-        const total_withdraw = await Withdraw.countDocuments({ status: "completed" });
-
+        const total_withdraw = await Withdraw.find({ status: "completed" });
+        const totalAmmount = total_withdraw.map(withdraw => withdraw.amount).reduce((a, b) => a + b, 0);
         res.send({
-            total,
+            total: totalAmmount,
             active,
             pending,
             blocked,
-            total_withdraw
+            total_withdraw 
         });
     } catch (error) {
         res.status(500).send({
