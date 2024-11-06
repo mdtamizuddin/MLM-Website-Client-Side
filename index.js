@@ -21,7 +21,7 @@ connectDB();
 app.use('/api/v1', require('./Routes/index'));
 app.get('/', (req, res) => {
     res.send({
-        message: "Server Is Running"
+        message: "Server Is Running 2"
     })
 })
 
